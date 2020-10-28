@@ -2,4 +2,4 @@
 
 python 3.8.6
 
-![Screenshot](Capture.jpg)
+![Screenshot](Capture.JPG)
