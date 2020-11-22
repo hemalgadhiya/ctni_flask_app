@@ -15,8 +15,6 @@ def login():
     return render_template('login.html')
 
 
-branch.master.remote=origin
-
 @app.route('/about')
 def about():
     return render_template('about.html')
