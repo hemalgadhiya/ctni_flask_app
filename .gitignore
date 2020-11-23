@@ -86,3 +86,16 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+### react
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+package-lock.json
+# testing
+/coverage
+# production
+/build
+# misc
+npm-debug.log*
