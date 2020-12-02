@@ -86,3 +86,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+*.idea/
+.idea/ctni_flask_app.iml
+.idea/misc.xml
