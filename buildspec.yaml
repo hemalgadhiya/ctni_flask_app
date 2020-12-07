@@ -1,68 +1,33 @@
 version: 0.2
 
-#env:
-  #variables:
-     # key: "value"
-     # key: "value"
-  #parameter-store:
-     # key: "value"
-     # key: "value"
-  #secrets-manager:
-     # key: secret-id:json-key:version-stage:version-id
-     # key: secret-id:json-key:version-stage:version-id
-  #exported-variables:
-     # - variable
-     # - variable
-  #git-credential-helper: yes
-#batch:
-  #fast-fail: true
-  #build-list:
-  #build-matrix:
-  #build-graph:
+env:
+  variables:
+     AWS_DEFAULT_REGION: "us-east-1"
+     CODE_DEPLOY_S3_BUCKET: "ctni-backend-codedeploy-artifact"
+  secrets-manager:
+     AWS_ACCESS_KEY_ID: ctni-cli-creds:AWS_ACCESS_KEY_ID
+     AWS_SECRET_ACCESS_KEY: ctni-cli-creds:AWS_SECRET_ACCESS_KEY
 phases:
   install:
-    #If you use the Ubuntu standard image 2.0 or later, you must specify runtime-versions.
-    #If you specify runtime-versions and use an image other than Ubuntu standard image 2.0, the build fails.
-    #runtime-versions:
-      # name: version
-      # name: version
-    #commands:
+    commands:
+      - apt-get update
       - echo entered install phase
       - echo Installing packages
-      - apt-get install python3.6
-      - apt install python3-pip
+      - apt-get install -y python3.6
+      - apt install -y python3-pip
       - apt-get install zip unzip
       - echo installing aws cli
       - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
       - unzip awscliv2.zip
+      - rm awscliv2.zip
       - ./aws/install
-  #pre_build:
-    #commands:
-      # - command
-      # - command
   build:
     commands:
-      # - command
-      # - command
-  #post_build:
-    #commands:
-      # - command
-      # - command
-#reports:
-  #report-name-or-arn:
-    #files:
-      # - location
-      # - location
-    #base-directory: location
-    #discard-paths: yes
-    #file-format: JunitXml | CucumberJson
-#artifacts:
-  #files:
-    # - location
-    # - location
-  #name: $(date +%Y-%m-%d)
-  #discard-paths: yes
-  #base-directory: location
-#cache:
-  #paths:
-    # - paths
+      - pwd
+      - ls
+      - zip -r ctni-backend-${CODEBUILD_BUILD_NUMBER}.zip . -x ./aws/**\*
+      - pwd
+      - ls -al
+  post_build:
+    commands:
+      - aws s3 cp ctni-backend-${CODEBUILD_BUILD_NUMBER}.zip s3://${CODE_DEPLOY_S3_BUCKET}
